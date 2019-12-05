@@ -13,19 +13,16 @@
  * writing app.js a little simpler to work with.
  */
 
-let Engine = (function(global) {
+var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas element's height/width and add it to the DOM.
      */
-    let doc = global.document,
+    var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-
-    const modal = document.querySelector('.modal-bg');
-    const replay = document.querySelector('.modal-button');
 
     canvas.width = 505;
     canvas.height = 606;
@@ -41,7 +38,7 @@ let Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
-        let now = Date.now(),
+        var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
         /* Call our update/render functions, pass along the time delta to
@@ -54,23 +51,14 @@ let Engine = (function(global) {
          * for the next time this function is called.
          */
         lastTime = now;
+        console.log(now);
 
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        if (player.win===true) {
-          win.requestAnimationFrame(id);
-          modal.classList.toggle('hide');
-        }
-        else {
-          win.requestAnimationFrame(main);
-        }
+        win.requestAnimationFrame(main);
     }
-    // If player won -> stop animation frame and call victory
-        if (game.board.paintNextFrame === false) {
-              global.cancelAnimationFrame(frameId);
-              game.board.toggleVictoryModal();
-        }
+
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
@@ -91,7 +79,7 @@ let Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
+        // updateEntities(dt);
         // checkCollisions();
     }
 
@@ -103,10 +91,9 @@ let Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        game.allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        game.player.update(frameId);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -151,7 +138,7 @@ let Engine = (function(global) {
             }
         }
 
-        renderEntities();
+        // renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
@@ -162,11 +149,11 @@ let Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        game.allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
-        game.player.render();
+        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -175,16 +162,6 @@ let Engine = (function(global) {
      */
     function reset() {
         // noop
-
-        // If modal is active -> turn off
-    if (!modal.classList.contains('hide')) {
-        game.board.toggleVictoryModal();
-    }
-    // Reset player pos back to start pos
-        game.player.resetHero();
-
-// Allow animation frame to start again
-        game.board.paintNextFrame = true;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -205,8 +182,4 @@ let Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
-
-    // Call new game on replay
-    document.querySelector('#replay').addEventListener('click', ()=> { init();});
-
 })(this);
