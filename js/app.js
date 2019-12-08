@@ -1,6 +1,8 @@
 (function(){
 
 
+  let is_game_over = false;
+
 // Enemies our player must avoid
 let Enemy = function Enemy(x, y, s) {
     // Variables applied to each of our instances go here,
@@ -10,7 +12,7 @@ let Enemy = function Enemy(x, y, s) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
-    this.y = y;
+    this.y = y + 55;
     this.speed = s;
 };
 
@@ -50,21 +52,29 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Enemy.prototype.handleInput = function(dt) {};
+
+
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
 const Player = function() {
   this.sprite = "images/char-boy.png";
-  this.x = 303;
-  this.y = 404;
+  this.x = 203;
+  this.y = 403;
   this.h_step = 101;
   this.v_step = 83;
 };
 
+Player.prototype.update = function(dt) {
+
+};
+
 Player.prototype.resetPosition = function() {
-  this.x = 303;
-  this.y = 404;
+  this.x = 203;
+  this.y = 403;
 };
 
 Player.prototype.render = function() {
@@ -74,10 +84,10 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(direction) {
   switch (direction) {
     case 'left':
-    this.x >= this.h_step ? this.x -= this.h_step : this.x -= 0;
+      this.x >= this.h_step ? this.x -= this.h_step : this.x -= 0;
       break;
     case 'right':
-      this.x <= (this.h_step * 5) ? this.x += this.h_step : this.x +=0;
+      this.x <= (this.h_step * 5) ? this.x += this.h_step : this.x += 0;
       break;
     case 'up':
       this.y -= this.v_step;
@@ -86,13 +96,13 @@ Player.prototype.handleInput = function(direction) {
         crossed++;
         updateView('you win! score: ' + score);
         window.gem = new Gem();
-        if(crossed % 5 ===0) {window.heart = new Heart(); }
+        if(crossed % 5 === 0) { window.heart = new Heart(); }
         this.resetPosition();
       }
       break;
     case 'down':
-        this.y <= (this.v_step * 4) ? this.y += this.v_step : this.y += 0;
-        break;
+      this.y <= (this.v_step * 4) ? this.y += this.v_step : this.y += 0;
+      break;
   }
 };
 
@@ -108,6 +118,9 @@ const players = [
   'images/char-princess-girl.png',
   'images/char-boy.png'
 ];
+
+const x_blocks = [101, 202, 404, 505, 606];
+const y_blocks = [100, 200, 300];
 
 const Selector = function Selector() {
     this.image = 'images/Selector.png';
@@ -131,6 +144,18 @@ const Selector = function Selector() {
     }
   }
 
+  function updateView(string) {
+    document.getElementById('isgameover').innerHTML = is_game_over;
+    if(string) { M.toast({html: string}); }
+  }
+
+  // Now instantiate your objects.
+  let enemy1 = new Enemy(-101, 0, 200);
+  let enemy2 = new Enemy(-101, 83, 300);
+  let enemy3 = new Enemy((-101*2.5), 83, 300);
+  const allEnemies = [];
+
+  window.allEnemies = [enemy1, enemy2, enemy3];
 
   // Place the player object in a variable called player
   window.player = new Player();
@@ -150,6 +175,5 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
   }
 });
-
 
 })()
