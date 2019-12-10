@@ -22,11 +22,10 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    //Moves the bugs across the rows
     this.x += this.speed * dt;
-    if (this.x > 505) {
+    if (this.x > 500) {
       this.x = -100;
-      let someSpeed = Math.floor(Math.random() * 4 + 1);
-      this.speed = 60 * someSpeed;
     }
 
     let enemyXLeftMax = this.x - 70;
@@ -61,7 +60,7 @@ Enemy.prototype.handleInput = function(dt) {};
 // a handleInput() method.
 
 const Player = function() {
-  this.sprite = "images/char-boy.png";
+  this.sprite = "images/char-princess-girl.png";
   this.x = 203;
   this.y = 403;
   this.h_step = 101;
@@ -87,16 +86,13 @@ Player.prototype.handleInput = function(direction) {
       this.x >= this.h_step ? this.x -= this.h_step : this.x -= 0;
       break;
     case 'right':
-      this.x <= (this.h_step * 5) ? this.x += this.h_step : this.x += 0;
+      this.x <= (this.h_step * 4) ? this.x += this.h_step : this.x += 0;
       break;
     case 'up':
       this.y -= this.v_step;
       if(this.y <= 50) {
-        score += 10;
-        crossed++;
-        updateView('you win! score: ' + score);
-        window.gem = new Gem();
-        if(crossed % 5 === 0) { window.heart = new Heart(); }
+        updateView('you win! score: ');
+        if(crossed % 5 === 0)
         this.resetPosition();
       }
       break;
@@ -125,17 +121,17 @@ const y_blocks = [100, 200, 300];
 const Selector = function Selector() {
     this.image = 'images/Selector.png';
 
-    this.x = 606;
-    this.y = 375;
+    this.x = 404;
+    this.y = 400;
   }
   Selector.prototype.render = function() {
     ctx.drawImage(Resources.get(this.image), this.x, this.y);
   };
   Selector.prototype.stepped_on = function() {
-    var leftMax = this.x - 40;
-    var rightMax = this.x + 40;
-    var topMax = this.y - 40;
-    var bottomMax = this.y + 40;
+    var leftMax = this.x - 20;
+    var rightMax = this.x + 20;
+    var topMax = this.y - 20;
+    var bottomMax = this.y + 20;
 
     if(player.x > leftMax && player.x < rightMax && player.y > topMax && player.y < bottomMax) {
       player.sprite = players[ Math.floor(Math.random() * players.length) ];
