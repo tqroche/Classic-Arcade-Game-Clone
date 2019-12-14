@@ -77,9 +77,11 @@ Player.prototype.handleInput = function (keyPress) {
   if (this.y < 0) {
       this.x = 202;
       this.y = 405;
-      displayModal();
-  }
-};
+      setTimeout(function() {
+        alert('you won');
+      }, 500);
+    }
+  };
 
 
 // Now instantiate your objects.
@@ -95,26 +97,6 @@ enemyOrientation.forEach(function (orientationY) {
     enemy = new Enemy(0, orientationY, 50 + Math.floor(Math.random() * 350));
     allEnemies.push(enemy);
 });
-
-// Shows the modal after game won
-let modal = document.getElementById("modal");
-
-function displayModal() {
-  console.log("display modal triggered")
-  modal.classList.add("modal");
-  modal.classList.remove("hide");
-}
-
-function hideModal() {
-  modal.classList.add("hide");
-}
-
-const modalRestartBtn = document.querySelector(".modal-restart");
-modalRestartBtn.addEventListener("click", onRestart);
-
-function onRestart() {
-    hideModal();
-}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method.
