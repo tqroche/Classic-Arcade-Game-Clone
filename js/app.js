@@ -32,7 +32,7 @@ Enemy.prototype.update = function (dt) {
         70 + player.y > this.y) {
         player.x = 202;
         player.y = 400;
-        checkVictory();
+        displayModal();
     };
 };
 
@@ -96,7 +96,16 @@ enemyOrientation.forEach(function (orientationY) {
     allEnemies.push(enemy);
 });
 
+// Shows the modal after game won
+let modal = document.getElementById("modal");
 
+function displayModal() {
+  console.log("display modal triggered")
+}
+
+function hideModal() {
+  modal.classList.add("hide");
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method.
