@@ -32,7 +32,6 @@ Enemy.prototype.update = function (dt) {
         70 + player.y > this.y) {
         player.x = 202;
         player.y = 400;
-        displayModal();
     };
 };
 
@@ -78,6 +77,7 @@ Player.prototype.handleInput = function (keyPress) {
   if (this.y < 0) {
       this.x = 202;
       this.y = 405;
+      displayModal();
   }
 };
 
