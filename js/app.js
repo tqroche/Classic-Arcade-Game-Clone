@@ -1,175 +1,111 @@
-(function(){
-
-
-  let is_game_over = false;
-
 // Enemies our player must avoid
-let Enemy = function Enemy(x, y, s) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+var Enemy = function (x, y, speed) {
+
+  // Variables applied to each of our instances go here,
+  // we've provided one for you to get started
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = x;
-    this.y = y + 55;
-    this.speed = s;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    //Moves the bugs across the rows
-    this.x += this.speed * dt;
-    if (this.x > 500) {
-      this.x = -100;
-    }
+Enemy.prototype.update = function (dt) {
 
-    let enemyXLeftMax = this.x - 70;
-    let enemyXRightMax = this.x + 70;
-    let enemyYTopMax = this.y - 60;
-    let enemyYBottomMax = this.y + 60;
-    if (player.x > enemyXleftMax && player.x < enemyXRightMax && player.y > enemyYTopMax && player.y < enemyYBottomMax) {
+  // You should multiply any movement by the dt parameter
+  // which will ensure the game runs at the same speed for
+  // all computers
+  this.x += this.speed * dt;
 
-    player.resetPosition();
-    lives--;
-    updateView('you died. ' + lives + ' live(s) remaining...');
-    if (lives === 0) {
-      alert('game over...');
-      player.resetPosition();
-      is_game_over = true;
-      updateView('you died. ' + lives + 'live(s) remaining...');
-    }
-  }
+    if (this.x > 625) {
+        this.x = -75;
+        this.speed = 100 + Math.floor(Math.random() * 350);
+    };
+
+    if (player.x < this.x + 80 &&
+        player.x + 80 > this.x &&
+        player.y < this.y + 70 &&
+        70 + player.y > this.y) {
+        player.x = 202;
+        player.y = 400;
+        checkVictory();
+    };
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-Enemy.prototype.handleInput = function(dt) {};
-
-
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
-const Player = function() {
-  this.sprite = "images/char-princess-girl.png";
-  this.x = 203;
-  this.y = 403;
-  this.h_step = 101;
-  this.v_step = 83;
+var Player = function (x, y) {
+    this.x = x;
+    this.y = y;
+    this.player = 'images/char-princess-girl.png';
 };
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function (dt) {
 
 };
 
-Player.prototype.resetPosition = function() {
-  this.x = 203;
-  this.y = 403;
+Player.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.player), this.x, this.y);
 };
 
-Player.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+Player.prototype.handleInput = function (keyPress) {
+  if (keyPress == 'left' && this.x > 0) {
+      this.x -= 102;
+  };
 
-Player.prototype.handleInput = function(direction) {
-  switch (direction) {
-    case 'left':
-      this.x >= this.h_step ? this.x -= this.h_step : this.x -= 0;
-      break;
-    case 'right':
-      this.x <= (this.h_step * 4) ? this.x += this.h_step : this.x += 0;
-      break;
-    case 'up':
-      this.y -= this.v_step;
-      if(this.y <= 50) {
-        updateView('you win! score: ');
-        if(crossed % 5 === 0)
-        this.resetPosition();
-      }
-      break;
-    case 'down':
-      this.y <= (this.v_step * 4) ? this.y += this.v_step : this.y += 0;
-      break;
+  if (keyPress == 'right' && this.x < 405) {
+      this.x += 102;
+  };
+
+  if (keyPress == 'up' && this.y > 0) {
+      this.y -= 83;
+  };
+
+  if (keyPress == 'down' && this.y < 405) {
+      this.y += 83;
+  };
+
+  if (this.y < 0) {
+      this.x = 202;
+      this.y = 405;
   }
 };
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+var allEnemies = [];
 
-const players = [
-  'images/char-boy.png',
-  'images/char-cat-girl.png',
-  'images/char-horn-girl.png',
-  'images/char-pink-girl.png',
-  'images/char-princess-girl.png',
-  'images/char-boy.png'
-];
+var enemyOrientation = [156, 64, 210];
+var player = new Player(202, 405);
 
-const x_blocks = [101, 202, 404, 505, 606];
-const y_blocks = [100, 200, 300];
 
-const Selector = function Selector() {
-    this.image = 'images/Selector.png';
+enemyOrientation.forEach(function (orientationY) {
+    enemy = new Enemy(0, orientationY, 50 + Math.floor(Math.random() * 350));
+    allEnemies.push(enemy);
+});
 
-    this.x = 404;
-    this.y = 400;
-  }
-  Selector.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.image), this.x, this.y);
-  };
-  Selector.prototype.stepped_on = function() {
-    var leftMax = this.x - 20;
-    var rightMax = this.x + 20;
-    var topMax = this.y - 20;
-    var bottomMax = this.y + 20;
 
-    if(player.x > leftMax && player.x < rightMax && player.y > topMax && player.y < bottomMax) {
-      player.sprite = players[ Math.floor(Math.random() * players.length) ];
-      updateView('character changed!');
-      player.resetPosition();
-    }
-  }
-
-  function updateView(string) {
-    document.getElementById('isgameover').innerHTML = is_game_over;
-    if(string) { M.toast({html: string}); }
-  }
-
-  // Now instantiate your objects.
-  let enemy1 = new Enemy(-101, 0, 200);
-  let enemy2 = new Enemy(-101, 83, 300);
-  let enemy3 = new Enemy((-101*2.5), 83, 300);
-  const allEnemies = [];
-
-  window.allEnemies = [enemy1, enemy2, enemy3];
-
-  // Place the player object in a variable called player
-  window.player = new Player();
-  window.selector = new Selector();
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    let allowedKeys = {
+// Player.handleInput() method.
+document.addEventListener('keyup', function (e) {
+    var allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
-
-  if (allowedKeys[e.keyCode]){
     player.handleInput(allowedKeys[e.keyCode]);
-  }
 });
-
-})()
