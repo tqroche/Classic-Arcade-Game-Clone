@@ -30,7 +30,7 @@ Enemy.prototype.update = function (dt) {
         player.x + 80 > this.x &&
         player.y < this.y + 70 &&
         70 + player.y > this.y) {
-        player.x = 202;
+        player.x = 200;
         player.y = 400;
     };
 };
@@ -59,24 +59,24 @@ Player.prototype.render = function () {
 
 Player.prototype.handleInput = function (keyPress) {
   if (keyPress == 'left' && this.x > 0) {
-      this.x -= 102;
+      this.x -= 100;
   };
 
-  if (keyPress == 'right' && this.x < 405) {
-      this.x += 102;
+  if (keyPress == 'right' && this.x < 400) {
+      this.x += 100;
   };
 
   if (keyPress == 'up' && this.y > 0) {
-      this.y -= 102;
+      this.y -= 100;
   };
 
-  if (keyPress == 'down' && this.y < 405) {
-      this.y += 102;
+  if (keyPress == 'down' && this.y < 400) {
+      this.y += 100;
   };
 
   if (this.y < 0) {
-      this.x = 202;
-      this.y = 405;
+      this.x = 200;
+      this.y = 400;
       setTimeout(function() {
         alert('you won');
       }, 500);
@@ -90,7 +90,7 @@ Player.prototype.handleInput = function (keyPress) {
 let allEnemies = [];
 
 let enemyOrientation = [156, 64, 210];
-let player = new Player(202, 405);
+let player = new Player(200, 400);
 
 
 enemyOrientation.forEach(function (orientationY) {
