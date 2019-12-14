@@ -101,10 +101,19 @@ let modal = document.getElementById("modal");
 
 function displayModal() {
   console.log("display modal triggered")
+  modal.classList.add("modal");
+  modal.classList.remove("hide");
 }
 
 function hideModal() {
   modal.classList.add("hide");
+}
+
+const modalRestartBtn = document.querySelector(".modal-restart");
+modalRestartBtn.addEventListener("click", onRestart);
+
+function onRestart() {
+    hideModal();
 }
 
 // This listens for key presses and sends the keys to your
